@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <style>
+      *{
+  font-family: Helvetica;
+  font-size: 32px;
+  margin: 0px;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+div.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+}
+
+svg {
+ height: 100%; 
+ width: 100%;
+ position: absolute;
+}
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+        <div id="robotSpeech">Hello</div>
+        <svg id="faceSVG" onmousemove="handleMouseMove(event)">
+          <circle id="leftEye" cx="30%" cy="50%" r=40 fill="black"> </circle>
+          <circle id="rightEye" cx="70%" cy="50%" r=40 fill="black"></circle>
+        </svg>
+    </div>
+    <script>
+      var isEditing = false;
+
+function handleMouseClick() {
+  console.log("Clicked SVG");
+}
+
+function handleEyeMouseClick(event) {
+  console.log("Clicked Eye");
+  isEditing = !isEditing;
+  // Uncomment the following line to stop the SVG from also receiving the event (assuming bubbleing up where this callback gets called first)
+  event.stopPropagation();
+}
+
+function handleMouseMove(event) {
+  let mouseX = event.clientX;
+  let mouseY = event.clientY;
+  let text = document.getElementById("robotSpeech");
+  text.innerHTML = "X:" + mouseX + ", Y:" + mouseY;
+  if (isEditing) {
+    let svg = document.getElementById("faceSVG");
+    let eyeL = document.getElementById("leftEye");
+    let eyeR = document.getElementById("rightEye");
+    console.log(svg.width);
+    let rect = svg.getBoundingClientRect();
+    eyeL.setAttribute('cx', mouseX);
+    eyeR.setAttribute('cx', rect.width - mouseX);
+  }
+}
+
+// Change last optional variable (useCapture) to "true" to have events trickle down (from svg to circle) instead of bubbleing up (from circle to svg)
+// document.addEventListener(event, function, useCapture)
+var svg = document.getElementById("faceSVG");
+svg.addEventListener("click", handleMouseClick, false);
+var leftEye = document.getElementById("leftEye");
+leftEye.addEventListener("click", handleEyeMouseClick, true);
+
+
+    </script>
+  </body>
+</html>
